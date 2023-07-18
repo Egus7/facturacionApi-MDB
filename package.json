@@ -4,7 +4,7 @@
   "description": "API Facturacion MongoDB",
   "main": "cnn.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node cnn.js"
   },
   "author": "Gustavo Gualan",
   "license": "ISC",
