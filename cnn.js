@@ -1,6 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
+const multer = require('multer');
+const azureStorage = require('azure-storage');
+const uuid = require('uuid/v1');
 
 const { MongoClient } = require('mongodb');
 const { ObjectId } = require('mongodb');
@@ -11,6 +15,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // URL de conexión a la base de datos
 const uri = 'mongodb://mongodb-server:KKhYrPPGM7jKSdqZtlVsdVQkeWUTlyTjiKtR1EQ4KLg11OmMR9USDvZ1Vu2ZyMXw1xXoqsfIBvnsACDbCJPo1Q==@mongodb-server.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@mongodb-server@'; // Reemplazar con la URL de conexión de tu base de datos MongoDB
@@ -149,21 +154,53 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
           res.status(500).send('Error al obtener el producto');
         });
     });
-    // Agregar un producto
-    app.post('/productos', (req, res) => {
-      const product = req.body;
-      const collection = db.collection('productos');
 
-      collection.insertOne(product)
-        .then(() => {
-          res.status(201).send('Producto agregado');
-        })
-        .catch(error => {
-          console.error('Error al agregar el producto:', error);
-          res.status(500).send('Error al agregar el producto');
-        });
-    });
+    
+  // Configurar el almacenamiento de Multer
+  const storage = multer.memoryStorage();
+  const upload = multer({ storage });
+      
+    
+  // Configurar la conexión a Azure Blob Storage
+  const connectionString = 'DefaultEndpointsProtocol=https;AccountName=storageimgserver;AccountKey=AFsRMBlZsXV2dQ/c34nPkY6qVfw/C/2MO0YfzAt9lqFb7wxfBmA5VVObbC97EnGM9DK0PwX+rT7x+AStAAQQ+g==;EndpointSuffix=core.windows.net';
+  const containerName = 'imagenesmongodb';
+  const blobService = azureStorage.createBlobService(connectionString);
 
+ // Agregar un producto
+ app.post('/productos', upload.single('image_producto'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No se ha proporcionado ninguna imagen');
+  }
+
+  const product = req.body;
+  const imageFile = req.file.buffer;
+  const imageName = `${uuid()}.jpg`; // Genera un nombre único para la imagen
+
+  blobService.createBlockBlobFromText(containerName, imageName, imageFile, (error, result, response) => {
+    if (error) {
+      console.error('Error al cargar la imagen:', error);
+      return res.status(500).send('Error al cargar la imagen');
+    }
+
+    // Obtén el enlace de la imagen
+    const imageUrl = blobService.getUrl(containerName, imageName);
+
+    product.image_producto = imageUrl; // Guarda el enlace de la imagen en el campo "image_producto"
+
+    const collection = db.collection('productos');
+
+    collection.insertOne(product)
+      .then(() => {
+        res.status(201).send('Producto agregado');
+      })
+      .catch(error => {
+        console.error('Error al agregar el producto:', error);
+        res.status(500).send('Error al agregar el producto');
+      });
+  });
+});
+
+    
     // Actualizar un producto por su ID
     app.put('/productos/:id', (req, res) => {
       const { id } = req.params;
