@@ -43,7 +43,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         })
         .catch(error => {
         console.error('Error al obtener los clientes:', error);
-        res.status(500).send('Error al obtener los cliente');
+        res.status(500).json({ "message": "Error al obtener el cliente" });
         });
     });
 
@@ -57,12 +57,12 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
             if (client) {
             res.json(client);
             } else {
-            res.status(404).send('Cliente no encontrado');
+            res.status(404).json({ "message": "Cliente no encontrado" });
             }
         })
         .catch(error => {
             console.error('Error al obtener el cliente:', error);
-            res.status(500).send('Error al obtener el cliente');
+            res.status(500).json({ "message": "Error al obtener cliente" });
         });
     });
 
@@ -73,11 +73,11 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     
         collection.insertOne(clientt)
             .then(() => {
-            res.status(201).send('Cliente agregado');
+            res.status(201).json({ "message": "Cliente agregado correctamente" });
             })
             .catch(error => {
             console.error('Error al agregar el cliente:', error);
-            res.status(500).send('Error al agregar el cliente');
+            res.status(500).json({ "message": "Error al agregar el cliente" });
             });
     });
 
@@ -90,14 +90,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         collection.updateOne({ _id: id }, { $set: updatedClientt })
           .then(result => {
             if (result.matchedCount > 0) {
-              res.status(200).send('Cliente actualizado');
+              res.status(200).json({ "message": "Cliente actualizado correctamente" });
             } else {
-              res.status(404).send('Cliente no encontrado');
+              res.status(404).json({ "message": "Cliente no encontrado" });
             }
           })
           .catch(error => {
             console.error('Error al actualizar el cliente:', error);
-            res.status(500).send('Error al actualizar el cliente');
+            res.status(500).json({ "message": "Error al actualizar el cliente" });
           });
       });
 
@@ -109,14 +109,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         collection.deleteOne({ _id: id })
           .then(result => {
             if (result.deletedCount > 0) {
-              res.status(200).send('Cliente eliminado');
+              res.status(200).json({ "message": "Cliente eliminado correctamente" });
             } else {
-              res.status(404).send('Cliente no encontrado');
+              res.status(404).json({ "message": "Cliente no encontrado" });
             }
           })
           .catch(error => {
             console.error('Error al eliminar el cliente:', error);
-            res.status(500).send('Error al eliminar el cliente');
+            res.status(500).json({ "message": "Cliente agregado correctamente" });
           });
     });
 
@@ -131,10 +131,9 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
             })
             .catch(error => {
             console.error('Error al obtener los productos:', error);
-            res.status(500).send('Error al obtener los productos');
+            res.status(500).json({ "message": "Error al obtener los productos" });
             });
         });
-
 
     // Obtener un producto por su ID
     app.get('/productos/:id', (req, res) => {
@@ -146,12 +145,12 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
           if (product) {
             res.json(product);
           } else {
-            res.status(404).send('Producto no encontrado');
+            res.status(404).json({ "message": "Producto obtenido correctamente" });
           }
         })
         .catch(error => {
           console.error('Error al obtener el producto:', error);
-          res.status(500).send('Error al obtener el producto');
+          res.status(500).json({ "message": "Error al obtener el producto" });
         });
     });
 
@@ -169,7 +168,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
  // Agregar un producto
  app.post('/productos', upload.single('image_producto'), (req, res) => {
   if (!req.file) {
-    return res.status(400).send('No se ha proporcionado ninguna imagen');
+    return res.status(400).json({ "message": "No hay imagen" });
   }
 
   const product = req.body;
@@ -179,7 +178,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   blobService.createBlockBlobFromText(containerName, imageName, imageFile, (error, result, response) => {
     if (error) {
       console.error('Error al cargar la imagen:', error);
-      return res.status(500).send('Error al cargar la imagen');
+      return res.status(500).json({ "message": "Erro al cargar imagen" });
     }
 
     // Obtén el enlace de la imagen
@@ -191,7 +190,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
     collection.insertOne(product)
       .then(() => {
-        res.status(201).send('Producto agregado');
+        res.status(201).json({ "message": "Producto agregado correctamente" });
       })
       .catch(error => {
         console.error('Error al agregar el producto:', error);
@@ -210,14 +209,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       collection.updateOne({ _id: id }, { $set: updatedProduct })
         .then(result => {
           if (result.matchedCount > 0) {
-            res.status(200).send('Producto actualizado');
+            res.status(200).json({ "message": "Producto actualizado correctamente" });
           } else {
-            res.status(404).send('Producto no encontrado');
+            res.status(404).json({ "message": "Producto no encontrado" });
           }
         })
         .catch(error => {
           console.error('Error al actualizar el producto:', error);
-          res.status(500).send('Error al actualizar el producto');
+          res.status(500).json({ "message": "Error al actualizar el producto" });
         });
     });
 
@@ -229,14 +228,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       collection.deleteOne({ _id: id })
         .then(result => {
           if (result.deletedCount > 0) {
-            res.status(200).send('Producto eliminado');
+            res.status(200).json({ "message": "Producto eliminado correctamente" });
           } else {
-            res.status(404).send('Producto no encontrado');
+            res.status(404).json({ "message": "Producto no encontrado" });
           }
         })
         .catch(error => {
           console.error('Error al eliminar el producto:', error);
-          res.status(500).send('Error al eliminar el producto');
+          res.status(500).json({ "message": "Error al eliminar el producto" });
         });
     });
 
@@ -250,7 +249,7 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
       })
       .catch(error => {
         console.error('Error al obtener los estados de pedidos:', error);
-        res.status(500).send('Error al obtener los estados de pedidos');
+        res.status(500).json({ "message": "Error al obtener estado-pedidos" });
       });
   });
   
@@ -264,12 +263,12 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         if (estado) {
           res.json(estado);
         } else {
-          res.status(404).send('Estado de pedido no encontrado');
+          res.status(404).json({ "message": "Estado pedido no encontrado" });
         }
       })
       .catch(error => {
         console.error('Error al obtener el estado de pedido:', error);
-        res.status(500).send('Error al obtener el estado de pedido');
+        res.status(500).json({ "message": "Error al obtener estado pedido" });
       });
   });
   
@@ -280,11 +279,11 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   
     collection.insertOne(estado)
       .then(() => {
-        res.status(201).send('Estado de pedido agregado');
+        res.status(201).json({ "message": "Estado pedido agregado" });
       })
       .catch(error => {
         console.error('Error al agregar el estado de pedido:', error);
-        res.status(500).send('Error al agregar el estado de pedido');
+        res.status(500).json({ "message": "Error al agregar estado pedido" });
       });
   });
   
@@ -297,14 +296,14 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     collection.updateOne({ _id: new ObjectId(id) }, { $set: updatedEstado })
       .then(result => {
         if (result.matchedCount > 0) {
-          res.status(200).send('Estado de pedido actualizado');
+          res.status(200).json({ "message": "Estado pedido actualizado" });
         } else {
-          res.status(404).send('Estado de pedido no encontrado');
+          res.status(404).json({ "message": "Estado pedido no encontrado" });
         }
       })
       .catch(error => {
         console.error('Error al actualizar el estado de pedido:', error);
-        res.status(500).send('Error al actualizar el estado de pedido');
+        res.status(500).json({ "message": "Error al actualizar pedido" });
       });
   });
   
@@ -316,137 +315,137 @@ MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     collection.deleteOne({ _id: new ObjectId(id) })
       .then(result => {
         if (result.deletedCount > 0) {
-          res.status(200).send('Estado de pedido eliminado');
+          res.status(200).json({ "message": "Estado pedido eliminado" });
         } else {
-          res.status(404).send('Estado de pedido no encontrado');
+          res.status(404).json({ "message": "Estado pedido no encontrado" });
         }
       })
       .catch(error => {
         console.error('Error al eliminar el estado de pedido:', error);
-        res.status(500).send('Error al eliminar el estado de pedido');
+        res.status(500).json({ "message": "Error al eliminar el pedido" });
       });
   });
   
-  // Obtener todos los parámetros
+// Obtener todos los parámetros
 app.get('/parametros', (req, res) => {
-    const collection = db.collection('parametros');
+  const collection = db.collection('parametros');
+
+  collection.find({}).toArray()
+    .then(parametros => {
+      res.json(parametros);
+    })
+    .catch(error => {
+      console.error('Error al obtener los parámetros:', error);
+      res.status(500).json({ message: 'Error al obtener los parámetros' });
+    });
+});
+
+// Obtener un parámetro por su ID
+app.get('/parametros/:id', (req, res) => {
+  const { id } = req.params;
+  const collection = db.collection('parametros');
+
+  collection.findOne({ _id: new ObjectId(id) })
+    .then(parametro => {
+      if (parametro) {
+        res.json(parametro);
+      } else {
+        res.status(404).json({ message: 'Parámetro no encontrado' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al obtener el parámetro:', error);
+      res.status(500).json({ message: 'Error al obtener el parámetro' });
+    });
+});
   
-    collection.find({}).toArray()
-      .then(parametros => {
-        res.json(parametros);
-      })
-      .catch(error => {
-        console.error('Error al obtener los parámetros:', error);
-        res.status(500).send('Error al obtener los parámetros');
-      });
-  });
+// Agregar un parámetro
+app.post('/parametros', (req, res) => {
+  const parametro = req.body;
+  const collection = db.collection('parametros');
+
+  collection.insertOne(parametro)
+    .then(() => {
+      res.status(201).json({ message: 'Parámetro agregado' });
+    })
+    .catch(error => {
+      console.error('Error al agregar el parámetro:', error);
+      res.status(500).json({ message: 'Error al agregar el parámetro' });
+    });
+});
   
-  // Obtener un parámetro por su ID
-  app.get('/parametros/:id', (req, res) => {
-    const { id } = req.params;
-    const collection = db.collection('parametros');
+// Actualizar un parámetro por su ID
+app.put('/parametros/:id', (req, res) => {
+  const { id } = req.params;
+  const updatedParametro = req.body;
+  const collection = db.collection('parametros');
+
+  collection.updateOne({ _id: new ObjectId(id) }, { $set: updatedParametro })
+    .then(result => {
+      if (result.matchedCount > 0) {
+        res.status(200).json({ message: 'Parámetro actualizado' });
+      } else {
+        res.status(404).json({ message: 'Parámetro no encontrado' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al actualizar el parámetro:', error);
+      res.status(500).json({ message: 'Error al actualizar el parámetro' });
+    });
+});
   
-    collection.findOne({ _id: new ObjectId(id) })
-      .then(parametro => {
-        if (parametro) {
-          res.json(parametro);
-        } else {
-          res.status(404).send('Parámetro no encontrado');
-        }
-      })
-      .catch(error => {
-        console.error('Error al obtener el parámetro:', error);
-        res.status(500).send('Error al obtener el parámetro');
-      });
-  });
-  
-  // Agregar un parámetro
-  app.post('/parametros', (req, res) => {
-    const parametro = req.body;
-    const collection = db.collection('parametros');
-  
-    collection.insertOne(parametro)
-      .then(() => {
-        res.status(201).send('Parámetro agregado');
-      })
-      .catch(error => {
-        console.error('Error al agregar el parámetro:', error);
-        res.status(500).send('Error al agregar el parámetro');
-      });
-  });
-  
-  // Actualizar un parámetro por su ID
-  app.put('/parametros/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedParametro = req.body;
-    const collection = db.collection('parametros');
-  
-    collection.updateOne({ _id: new ObjectId(id) }, { $set: updatedParametro })
-      .then(result => {
-        if (result.matchedCount > 0) {
-          res.status(200).send('Parámetro actualizado');
-        } else {
-          res.status(404).send('Parámetro no encontrado');
-        }
-      })
-      .catch(error => {
-        console.error('Error al actualizar el parámetro:', error);
-        res.status(500).send('Error al actualizar el parámetro');
-      });
-  });
-  
-  // Eliminar un parámetro por su ID
-  app.delete('/parametros/:id', (req, res) => {
-    const { id } = req.params;
-    const collection = db.collection('parametros');
-  
-    collection.deleteOne({ _id: new ObjectId(id) })
-      .then(result => {
-        if (result.deletedCount > 0) {
-          res.status(200).send('Parámetro eliminado');
-        } else {
-          res.status(404).send('Parámetro no encontrado');
-        }
-      })
-      .catch(error => {
-        console.error('Error al eliminar el parámetro:', error);
-        res.status(500).send('Error al eliminar el parámetro');
-      });
-  });
+// Eliminar un parámetro por su ID
+app.delete('/parametros/:id', (req, res) => {
+  const { id } = req.params;
+  const collection = db.collection('parametros');
+
+  collection.deleteOne({ _id: new ObjectId(id) })
+    .then(result => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({ message: 'Parámetro eliminado' });
+      } else {
+        res.status(404).json({ message: 'Parámetro no encontrado' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al eliminar el parámetro:', error);
+      res.status(500).json({ message: 'Error al eliminar el parámetro' });
+    });
+});
   
   // ---------------------------------------------
-  // Obtener todas las facturas
+// Obtener todas las facturas
 app.get('/facturacabs', (req, res) => {
-    const collection = db.collection('facturacabs');
+  const collection = db.collection('facturacabs');
+
+  collection.find({}).toArray()
+    .then(facturacabs => {
+      res.json(facturacabs);
+    })
+    .catch(error => {
+      console.error('Error al obtener las facturas:', error);
+      res.status(500).json({ message: 'Error al obtener las facturas' });
+    });
+});
   
-    collection.find({}).toArray()
-      .then(facturacabs => {
-        res.json(facturacabs);
-      })
-      .catch(error => {
-        console.error('Error al obtener las facturas:', error);
-        res.status(500).send('Error al obtener las facturas');
-      });
-  });
-  
-  // Obtener una factura por su ID
-  app.get('/facturacabs/:id', (req, res) => {
-    const { id } = req.params;
-    const collection = db.collection('facturacabs');
-  
-    collection.findOne({ _id: new ObjectId(id) })
-      .then(facturacab => {
-        if (facturacab) {
-          res.json(facturacab);
-        } else {
-          res.status(404).send('Factura no encontrada');
-        }
-      })
-      .catch(error => {
-        console.error('Error al obtener la factura:', error);
-        res.status(500).send('Error al obtener la factura');
-      });
-  });
+// Obtener una factura por su ID
+app.get('/facturacabs/:id', (req, res) => {
+  const { id } = req.params;
+  const collection = db.collection('facturacabs');
+
+  collection.findOne({ _id: new ObjectId(id) })
+    .then(facturacab => {
+      if (facturacab) {
+        res.json(facturacab);
+      } else {
+        res.status(404).json({ message: 'Factura no encontrada' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al obtener la factura:', error);
+      res.status(500).json({ message: 'Error al obtener la factura' });
+    });
+});
   
   // Agregar una factura
   app.post('/facturacabs', (req, res) => {
@@ -463,131 +462,107 @@ app.get('/facturacabs', (req, res) => {
       });
   });
   
-  // Actualizar una factura por su ID
-  app.put('/facturacabs/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedFacturacab = req.body;
-    const collection = db.collection('facturacabs');
+// Agregar una factura
+app.post('/facturacabs', (req, res) => {
+  const facturacab = req.body;
+  const collection = db.collection('facturacabs');
+
+  collection.insertOne(facturacab)
+    .then(() => {
+      res.status(201).json({ message: 'Factura agregada' });
+    })
+    .catch(error => {
+      console.error('Error al agregar la factura:', error);
+      res.status(500).json({ message: 'Error al agregar la factura' });
+    });
+});
   
-    collection.updateOne({ _id: new ObjectId(id) }, { $set: updatedFacturacab })
-      .then(result => {
-        if (result.matchedCount > 0) {
-          res.status(200).send('Factura actualizada');
-        } else {
-          res.status(404).send('Factura no encontrada');
-        }
-      })
-      .catch(error => {
-        console.error('Error al actualizar la factura:', error);
-        res.status(500).send('Error al actualizar la factura');
-      });
-  });
+ // Eliminar una factura por su ID
+app.delete('/facturacabs/:id', (req, res) => {
+  const { id } = req.params;
+  const collection = db.collection('facturacabs');
+
+  collection.deleteOne({ _id: new ObjectId(id) })
+    .then(result => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({ message: 'Factura eliminada' });
+      } else {
+        res.status(404).json({ message: 'Factura no encontrada' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al eliminar la factura:', error);
+      res.status(500).json({ message: 'Error al eliminar la factura' });
+    });
+});
   
-  // Eliminar una factura por su ID
-  app.delete('/facturacabs/:id', (req, res) => {
-    const { id } = req.params;
-    const collection = db.collection('facturacabs');
-  
-    collection.deleteOne({ _id: new ObjectId(id) })
-      .then(result => {
-        if (result.deletedCount > 0) {
-          res.status(200).send('Factura eliminada');
-        } else {
-          res.status(404).send('Factura no encontrada');
-        }
-      })
-      .catch(error => {
-        console.error('Error al eliminar la factura:', error);
-        res.status(500).send('Error al eliminar la factura');
-      });
-  });
-  
-  // Obtener todos los pedidos
+// Obtener todos los pedidos
 app.get('/pedidos', (req, res) => {
-    const collection = db.collection('pedidocabs');
+  const collection = db.collection('pedidocabs');
+
+  collection.find({}).toArray()
+    .then(pedidos => {
+      res.json(pedidos);
+    })
+    .catch(error => {
+      console.error('Error al obtener los pedidos:', error);
+      res.status(500).json({ message: 'Error al obtener los pedidos' });
+    });
+});
   
-    collection.find({}).toArray()
-      .then(pedidos => {
-        res.json(pedidos);
-      })
-      .catch(error => {
-        console.error('Error al obtener los pedidos:', error);
-        res.status(500).send('Error al obtener los pedidos');
-      });
-  });
+ // Obtener un pedido por su ID
+app.get('/pedidos/:id', (req, res) => {
+  const { id } = req.params;
+  const collection = db.collection('pedidocabs');
+
+  collection.findOne({ _id: new ObjectId(id) })
+    .then(pedido => {
+      if (pedido) {
+        res.json(pedido);
+      } else {
+        res.status(404).json({ message: 'Pedido no encontrado' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al obtener el pedido:', error);
+      res.status(500).json({ message: 'Error al obtener el pedido' });
+    });
+});
+
+ // Agregar un pedido
+app.post('/pedidos', (req, res) => {
+  const pedido = req.body;
+  const collection = db.collection('pedidocabs');
+
+  collection.insertOne(pedido)
+    .then(() => {
+      res.status(201).json({ message: 'Pedido agregado' });
+    })
+    .catch(error => {
+      console.error('Error al agregar el pedido:', error);
+      res.status(500).json({ message: 'Error al agregar el pedido' });
+    });
+});
   
-  // Obtener un pedido por su ID
-  app.get('/pedidos/:id', (req, res) => {
-    const { id } = req.params;
-    const collection = db.collection('pedidocabs');
   
-    collection.findOne({ _id: new ObjectId(id) })
-      .then(pedido => {
-        if (pedido) {
-          res.json(pedido);
-        } else {
-          res.status(404).send('Pedido no encontrado');
-        }
-      })
-      .catch(error => {
-        console.error('Error al obtener el pedido:', error);
-        res.status(500).send('Error al obtener el pedido');
-      });
-  });
-  
-  // Agregar un pedido
-  app.post('/pedidos', (req, res) => {
-    const pedido = req.body;
-    const collection = db.collection('pedidocabs');
-  
-    collection.insertOne(pedido)
-      .then(() => {
-        res.status(201).send('Pedido agregado');
-      })
-      .catch(error => {
-        console.error('Error al agregar el pedido:', error);
-        res.status(500).send('Error al agregar el pedido');
-      });
-  });
-  
-  // Actualizar un pedido por su ID
-  app.put('/pedidos/:id', (req, res) => {
-    const { id } = req.params;
-    const updatedPedido = req.body;
-    const collection = db.collection('pedidocabs');
-  
-    collection.updateOne({ _id: new ObjectId(id) }, { $set: updatedPedido })
-      .then(result => {
-        if (result.matchedCount > 0) {
-          res.status(200).send('Pedido actualizado');
-        } else {
-          res.status(404).send('Pedido no encontrado');
-        }
-      })
-      .catch(error => {
-        console.error('Error al actualizar el pedido:', error);
-        res.status(500).send('Error al actualizar el pedido');
-      });
-  });
-  
-  // Eliminar un pedido por su ID
-  app.delete('/pedidos/:id', (req, res) => {
-    const { id } = req.params;
-    const collection = db.collection('pedidocabs');
-  
-    collection.deleteOne({ _id: new ObjectId(id) })
-      .then(result => {
-        if (result.deletedCount > 0) {
-          res.status(200).send('Pedido eliminado');
-        } else {
-          res.status(404).send('Pedido no encontrado');
-        }
-      })
-      .catch(error => {
-        console.error('Error al eliminar el pedido:', error);
-        res.status(500).send('Error al eliminar el pedido');
-      });
-  });
+// Eliminar un pedido por su ID
+app.delete('/pedidos/:id', (req, res) => {
+  const { id } = req.params;
+  const collection = db.collection('pedidocabs');
+
+  collection.deleteOne({ _id: new ObjectId(id) })
+    .then(result => {
+      if (result.deletedCount > 0) {
+        res.status(200).json({ message: 'Pedido eliminado' });
+      } else {
+        res.status(404).json({ message: 'Pedido no encontrado' });
+      }
+    })
+    .catch(error => {
+      console.error('Error al eliminar el pedido:', error);
+      res.status(500).json({ message: 'Error al eliminar el pedido' });
+    });
+});
   
     // Iniciar el servidor
     app.listen(port, () => {
